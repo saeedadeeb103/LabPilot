@@ -1,0 +1,16 @@
+# <type>(<scope>): <subject>
+#
+# Types:   feat fix refactor perf test docs build ci chore revert
+# Scopes:  experimentation governance codebase evidence orchestration evaluation
+#          shared-kernel platform api worker mcp web infra docs
+#
+# Subject: imperative mood, lower case, no trailing period, under 72 characters.
+#          "add resource ceiling to experiment spec", not "added" or "adds".
+#
+# Body:    why the change was needed and what it affects. Wrap at 72 columns.
+#          Skip it when the subject genuinely says everything.
+#
+# Footer:  "Refs: #12" or "Closes: #12".
+#
+# One logical change per commit. If the subject needs the word "and",
+# it is probably two commits.
