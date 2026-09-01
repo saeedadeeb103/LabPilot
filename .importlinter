@@ -1,0 +1,84 @@
+# Machine-checked architecture. These contracts are the reason the bounded
+# contexts stay bounded: a violation fails the build instead of surfacing in
+# review six months later.
+
+[importlinter]
+root_packages =
+    labpilot
+include_external_packages = True
+
+[importlinter:contract:top-level-layers]
+name = Top-level packages are layered
+type = layers
+layers =
+    labpilot.composition
+    labpilot.contexts
+    labpilot.platform
+    labpilot.shared_kernel
+
+[importlinter:contract:context-internal-layers]
+name = Every context is internally hexagonal
+type = layers
+layers =
+    interface : infrastructure
+    application
+    domain
+containers =
+    labpilot.contexts.experimentation
+    labpilot.contexts.governance
+    labpilot.contexts.codebase
+    labpilot.contexts.evidence
+    labpilot.contexts.orchestration
+    labpilot.contexts.evaluation
+
+[importlinter:contract:supporting-contexts-independent]
+name = Supporting and core contexts do not know about each other
+type = independence
+modules =
+    labpilot.contexts.experimentation
+    labpilot.contexts.governance
+    labpilot.contexts.codebase
+    labpilot.contexts.evidence
+    labpilot.contexts.evaluation
+
+[importlinter:contract:orchestration-uses-published-interfaces]
+name = Orchestration reaches other contexts only through their application layer
+type = forbidden
+source_modules =
+    labpilot.contexts.orchestration
+forbidden_modules =
+    labpilot.contexts.experimentation.domain
+    labpilot.contexts.experimentation.infrastructure
+    labpilot.contexts.experimentation.interface
+    labpilot.contexts.governance.domain
+    labpilot.contexts.governance.infrastructure
+    labpilot.contexts.governance.interface
+    labpilot.contexts.codebase.domain
+    labpilot.contexts.codebase.infrastructure
+    labpilot.contexts.codebase.interface
+    labpilot.contexts.evidence.domain
+    labpilot.contexts.evidence.infrastructure
+    labpilot.contexts.evidence.interface
+
+[importlinter:contract:domain-is-framework-free]
+name = Domain layers depend on no framework except Pydantic
+type = forbidden
+source_modules =
+    labpilot.contexts.experimentation.domain
+    labpilot.contexts.governance.domain
+    labpilot.contexts.codebase.domain
+    labpilot.contexts.evidence.domain
+    labpilot.contexts.orchestration.domain
+    labpilot.contexts.evaluation.domain
+forbidden_modules =
+    sqlalchemy
+    alembic
+    fastapi
+    starlette
+    uvicorn
+    httpx
+    docker
+    mlflow
+    mcp
+    langgraph
+    hydra
